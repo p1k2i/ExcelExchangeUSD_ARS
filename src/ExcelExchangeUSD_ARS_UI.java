@@ -31,6 +31,8 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
     private JTextField tfCellEnd;
     private JLabel labelColumn;
     private JTextField httpsWwwDolarsiComTextField;
+    private JCheckBox cbDiscardFractional;
+    private JCheckBox cbSaveAsText;
 
     public ExcelExchangeUSD_ARS_UI() {
         openButton.addMouseListener(new MouseAdapter() {
@@ -181,6 +183,8 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
                         }
                     }
 
+                    int cellsCountWrote = 0;
+
                     // create excel
                     File tempFile = null;
                     try (XSSFWorkbook workbook = Utils.getWorkbookSafe(new File(tfInFile.getText()), tempFile)){
@@ -194,18 +198,34 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
                         final int colIndexBegin = cellReferenceBegin.getCol();
                         final int colIndexEnd = cellReferenceEnd.getCol();
 
-                        DataFormatter df = new DataFormatter();
+                        final DataFormatter df = new DataFormatter();
+                        final boolean discardFrac = cbDiscardFractional.isSelected();
+                        final boolean saveAsText = cbSaveAsText.isSelected();
 
                         for (int rowIndex = rowIndexBegin; rowIndex <= rowIndexEnd; rowIndex++){
                             XSSFRow row = sheet.getRow(rowIndex);
-                            for (int colIndex = colIndexBegin; colIndex <= colIndexEnd; colIndex++){
-                                XSSFCell cell = row.getCell(colIndex);
-                                String cellVal = df.formatCellValue(cell);
-                                try {
-                                    double cellValD = Double.parseDouble(cellVal);
-                                    cell.setCellValue(cellValD*multiplicator);
-                                } catch (NullPointerException | NumberFormatException ignored){
+                            try {
+                                for (int colIndex = colIndexBegin; colIndex <= colIndexEnd; colIndex++) {
+                                    XSSFCell cell = row.getCell(colIndex);
+                                    String cellVal = df.formatCellValue(cell);
+                                    try {
+                                        double cellValD = Double.parseDouble(cellVal) * multiplicator;
+                                        if (discardFrac) {
+                                            if (saveAsText)
+                                                cell.setCellValue(Integer.toString((int) cellValD));
+                                            else
+                                                cell.setCellValue((int) cellValD);
+                                        } else {
+                                            if (saveAsText)
+                                                cell.setCellValue(Double.toString(cellValD));
+                                            else
+                                                cell.setCellValue(cellValD);
+                                        }
+                                        cellsCountWrote++;
+                                    } catch (NullPointerException | NumberFormatException ignored) { // no cell exists or is not numeric
+                                    }
                                 }
+                            } catch (NullPointerException ignored){ // no row exists
                             }
                         }
 
@@ -220,6 +240,10 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
                     } finally {
                         if (tempFile!=null && tempFile.exists()) tempFile.delete();
                     }
+
+                    JOptionPane.showMessageDialog(null,
+                            "Operation complete. "+cellsCountWrote+" cells was changed.",
+                            "Done", JOptionPane.INFORMATION_MESSAGE);
 
                 } catch (Throwable exception){
                     JOptionPane.showMessageDialog(null,
@@ -377,7 +401,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
          */
 
         setContentPane(panelMain);
-        setTitle("Excel Exchange USD/ARS");
+        setTitle("Excel Exchange USD/ARS v1.0.1");
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

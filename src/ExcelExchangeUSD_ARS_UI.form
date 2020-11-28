@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ExcelExchangeUSD_ARS_UI">
-  <grid id="27dc6" binding="panelMain" layout-manager="GridLayoutManager" row-count="9" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="panelMain" layout-manager="GridLayoutManager" row-count="11" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
       <xy x="20" y="20" width="561" height="382"/>
     </constraints>
     <properties>
       <minimumSize width="200" height="100"/>
-      <preferredSize width="500" height="250"/>
+      <preferredSize width="500" height="350"/>
     </properties>
     <border type="none"/>
     <children>
@@ -67,7 +67,7 @@
       </component>
       <component id="35dd1" class="javax.swing.JLabel">
         <constraints>
-          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Out file:"/>
@@ -75,7 +75,7 @@
       </component>
       <component id="fd49f" class="javax.swing.JTextField" binding="tfOutFile">
         <constraints>
-          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="7" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
@@ -89,7 +89,7 @@
       </component>
       <component id="8d3dd" class="javax.swing.JButton" binding="pathButton" default-binding="true">
         <constraints>
-          <grid row="7" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Path..."/>
@@ -103,7 +103,7 @@
       </component>
       <component id="3b02a" class="javax.swing.JButton" binding="startProcessButton" default-binding="true">
         <constraints>
-          <grid row="8" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="10" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Start Process"/>
@@ -162,7 +162,7 @@
       </component>
       <component id="5971c" class="javax.swing.JTextField" binding="httpsWwwDolarsiComTextField" default-binding="true">
         <constraints>
-          <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="1" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="10" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="1" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <minimum-size width="50" height="-1"/>
           </grid>
         </constraints>
@@ -170,6 +170,38 @@
           <editable value="false"/>
           <font size="9"/>
           <text value="https://www.dolarsi.com/api/api.php?type=valoresprincipales"/>
+        </properties>
+      </component>
+      <component id="22bb0" class="javax.swing.JCheckBox" binding="cbDiscardFractional">
+        <constraints>
+          <grid row="7" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <minimum-size width="50" height="15"/>
+            <preferred-size width="-1" height="15"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Discard fractional part"/>
+        </properties>
+      </component>
+      <component id="62bc5" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="50" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="(rectangle range)"/>
+        </properties>
+      </component>
+      <component id="74a71" class="javax.swing.JCheckBox" binding="cbSaveAsText">
+        <constraints>
+          <grid row="8" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="1" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <minimum-size width="50" height="15"/>
+            <preferred-size width="-1" height="15"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Save number as test"/>
         </properties>
       </component>
     </children>
