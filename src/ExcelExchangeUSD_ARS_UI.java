@@ -33,6 +33,8 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
     private JTextField httpsWwwDolarsiComTextField;
     private JCheckBox cbDiscardFractional;
     private JCheckBox cbSaveAsText;
+    private JTextField tfMultiplier;
+    private JCheckBox cbMultiplier;
 
     public ExcelExchangeUSD_ARS_UI() {
         openButton.addMouseListener(new MouseAdapter() {
@@ -99,6 +101,8 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
+                    double multiplierCustom = Double.parseDouble(tfMultiplier.getText());
+
                     ConvertType convertType = ConvertType.valueOf(cbConverts.getSelectedItem().toString());
 
                     //Instantiating the URL class
@@ -209,7 +213,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
                                     XSSFCell cell = row.getCell(colIndex);
                                     String cellVal = df.formatCellValue(cell);
                                     try {
-                                        double cellValD = Double.parseDouble(cellVal) * multiplicator;
+                                        double cellValD = Double.parseDouble(cellVal) * multiplicator * multiplierCustom;
                                         if (discardFrac) {
                                             if (saveAsText)
                                                 cell.setCellValue(Integer.toString((int) cellValD));
@@ -392,6 +396,18 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
             cbConverts.addItem(convertType.name());
         }
 
+        cbMultiplier.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (cbMultiplier.isSelected()){
+                    tfMultiplier.setEnabled(true);
+                } else {
+                    tfMultiplier.setEnabled(false);
+                    tfMultiplier.setText("1.0");
+                }
+            }
+        });
+
         /*
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -401,7 +417,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
          */
 
         setContentPane(panelMain);
-        setTitle("Excel Exchange USD/ARS v1.0.1");
+        setTitle("Excel Exchange USD/ARS v1.1.0");
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
