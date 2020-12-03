@@ -35,6 +35,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
     private JCheckBox cbSaveAsText;
     private JTextField tfMultiplier;
     private JCheckBox cbMultiplier;
+    private JTextField tfPrice;
 
     public ExcelExchangeUSD_ARS_UI() {
         openButton.addMouseListener(new MouseAdapter() {
@@ -102,91 +103,8 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 try {
                     double multiplierCustom = Double.parseDouble(tfMultiplier.getText());
-
                     ConvertType convertType = ConvertType.valueOf(cbConverts.getSelectedItem().toString());
-
-                    //Instantiating the URL class
-                    URL url = new URL("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
-                    //Retrieving the contents of the specified page
-                    Scanner sc = new Scanner(url.openStream());
-                    //Instantiating the StringBuffer class to hold the result
-                    StringBuffer sb = new StringBuffer();
-                    while(sc.hasNext()) {
-                        sb.append(sc.next());
-                        //System.out.println(sc.next());
-                    }
-                    //Retrieving the String from the String Buffer object
-                    String responseResult = sb.toString();
-                    JSONArray jsonArray = new JSONArray(responseResult);
-
-                    double multiplicator = 1;
-
-                    for (int i=0; i < jsonArray.length(); i++){
-                        JSONObject jo = jsonArray.getJSONObject(i);
-                        JSONObject joCasa = jo.getJSONObject("casa");
-
-                        String nombre = joCasa.getString("nombre");
-
-                        switch (convertType) {
-                            case USD_TO_ARS_SELL:
-                                if (nombre.replace(" ","").equals("DolarOficial")){
-                                    multiplicator = Double.parseDouble(
-                                      joCasa.getString("venta").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case USD_TO_ARS_BUY:
-                                if (nombre.replace(" ","").equals("DolarOficial")){
-                                    multiplicator = Double.parseDouble(
-                                            joCasa.getString("compra").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case ARS_TO_USD_SELL:
-                                if (nombre.replace(" ","").equals("DolarOficial")){
-                                    multiplicator = 1d/Double.parseDouble(
-                                            joCasa.getString("venta").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case ARS_TO_USD_BUY:
-                                if (nombre.replace(" ","").equals("DolarOficial")){
-                                    multiplicator = 1d/Double.parseDouble(
-                                            joCasa.getString("compra").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case USD_TO_ARS_SELL_BLUE:
-                                if (nombre.replace(" ","").equals("DolarBlue")){
-                                    multiplicator = Double.parseDouble(
-                                            joCasa.getString("venta").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case USD_TO_ARS_BUY_BLUE:
-                                if (nombre.replace(" ","").equals("DolarBlue")){
-                                    multiplicator = Double.parseDouble(
-                                            joCasa.getString("compra").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case ARS_TO_USD_SELL_BLUE:
-                                if (nombre.replace(" ","").equals("DolarBlue")){
-                                    multiplicator = 1d/Double.parseDouble(
-                                            joCasa.getString("venta").replace(',','.')
-                                    );
-                                }
-                                break;
-                            case ARS_TO_USD_BUY_BLUE:
-                                if (nombre.replace(" ","").equals("DolarBlue")){
-                                    multiplicator = 1/Double.parseDouble(
-                                            joCasa.getString("compra").replace(',','.')
-                                    );
-                                }
-                                break;
-                        }
-                    }
-
+                    double multiplier = UsdPriceApi.getPrice(convertType);
                     int cellsCountWrote = 0;
 
                     // create excel
@@ -213,7 +131,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
                                     XSSFCell cell = row.getCell(colIndex);
                                     String cellVal = df.formatCellValue(cell);
                                     try {
-                                        double cellValD = Double.parseDouble(cellVal) * multiplicator * multiplierCustom;
+                                        double cellValD = Double.parseDouble(cellVal) * multiplier * multiplierCustom;
                                         if (discardFrac) {
                                             if (saveAsText)
                                                 cell.setCellValue(Integer.toString((int) cellValD));
@@ -386,6 +304,22 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
         cbConverts.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        ConvertType convertType = ConvertType.valueOf(cbConverts.getSelectedItem().toString());
+                        double price = UsdPriceApi.getPrice(convertType);
+                        String priceStr = Double.toString(price);
+                        priceStr = priceStr.substring(0, Math.min(priceStr.length(),8));
+                        tfPrice.setText(priceStr);
+                    } catch (Throwable exception) {
+                        JOptionPane.showMessageDialog(null,
+                                exception.getClass().getCanonicalName() +
+                                        System.lineSeparator() +
+                                        exception.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        exception.printStackTrace();
+                    }
+                }
+
                 if (tfInFile.getText().isEmpty()) return;
 
                 tfOutFile.setText(Utils.addStringToEndFileName(tfInFile.getText(), "_"+e.getItem().toString()));
@@ -417,7 +351,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
          */
 
         setContentPane(panelMain);
-        setTitle("Excel Exchange USD/ARS v1.1.0");
+        setTitle("Excel Exchange USD/ARS v1.1.1");
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
