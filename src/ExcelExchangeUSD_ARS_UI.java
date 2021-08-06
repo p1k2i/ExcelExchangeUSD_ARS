@@ -351,7 +351,7 @@ public class ExcelExchangeUSD_ARS_UI extends JFrame {
          */
 
         setContentPane(panelMain);
-        setTitle("Excel Exchange USD/ARS v1.1.1");
+        setTitle("Excel Exchange USD/ARS v1.1.2");
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

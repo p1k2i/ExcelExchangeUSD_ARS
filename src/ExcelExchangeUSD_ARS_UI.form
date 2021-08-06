@@ -172,7 +172,7 @@
         </constraints>
         <properties>
           <editable value="false"/>
-          <focusable value="false"/>
+          <focusable value="true"/>
           <font size="9"/>
           <text value="https://www.dolarsi.com/api/api.php?type=valoresprincipales"/>
         </properties>
@@ -207,7 +207,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Save number as test"/>
+          <text value="Save number as text"/>
         </properties>
       </component>
       <component id="ac70f" class="javax.swing.JTextField" binding="tfMultiplier">
